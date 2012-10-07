@@ -10,8 +10,12 @@ module Kyotorb
       execute :commit, '-m', message
     end
 
+    # FIXME: need more cute solution
     def stash(type = :save)
-      execute :stash, type.to_s unless block_given?
+      unless block_given?
+        execute :stash, type.to_s
+        return
+      end
       execute :stash, 'save'
       yield
       execute :stash, 'pop'
