@@ -5,7 +5,7 @@ Tools for Kyoto.rb meetup
 ### Generate meetup wiki page template
 
 ```shell
-$ bundle
+$ bundle install
 $ bundle exec ruby bin/meetup template <告知メールのURL>
 ```
 
