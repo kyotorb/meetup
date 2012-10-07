@@ -8,7 +8,7 @@ group :development do
   gem 'guard'
   gem 'guard-rspec'
   if RUBY_PLATFORM = 'x86_64-darwin12.2.0'
-    gem 'rb-fsevent'
+    gem 'rb-fsevent', require: false
     gem 'terminal-notifier-guard'
   end
 end
