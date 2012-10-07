@@ -1,0 +1,18 @@
+# coding: utf-8
+
+require File.expand_path('../lib/kyotorb', File.dirname(__FILE__))
+
+require 'thor'
+
+module Kyotorb
+  class CLI < Thor
+    desc :template, 'Generate wiki template'
+    def template(url)
+      meetup = Meetup.new(url)
+      meetup.generate(:wiki)
+    end
+  end
+end
+
+Kyotorb::CLI.start
+
