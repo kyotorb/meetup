@@ -37,6 +37,7 @@ module Kyotorb
     def generate_wiki!
       initialize_or_update_wiki
       copy_template
+      update_histories
       publish_wiki
     end
 
@@ -61,12 +62,31 @@ module Kyotorb
       end
     end
 
+    def update_histories
+      home_file_path = File.join(wiki_dir, 'Home.md')
+      body = ''
+      flag = false
+      File.readlines(home_file_path).each do |line|
+        if !flag && /\A\* / =~ line
+          body << "* #{history_link}\n"
+          flag = true
+        end
+        body << line
+      end
+      File.write(home_file_path, body)
+    end
+
+    def history_link
+      "[[#{name}]] - #{wiki_date}"
+    end
+
     def publish_wiki
       raise unless File.exist?(wiki_dir)
       FileUtils.cd(wiki_dir) do
+        git.add 'Home.md'
+        git.add wiki_file_name
+        git.commit "Created next meetup ##{numbering}"
         git.stash do
-          git.add wiki_file_name
-          git.commit "'Created next meetup ##{numbering}'"
           git.push
         end
       end

@@ -22,6 +22,7 @@ module Kyotorb
 
   describe Meetup do
     let(:dummy_mail_url) { File.expand_path('mail.html', File.dirname(__FILE__)) }
+    let(:dummy_home_file) { File.expand_path('Home.md', File.dirname(__FILE__)) }
     let(:wiki_dir) { File.expand_path('meetup.wiki', File.dirname(__FILE__)) }
 
     describe '#generate_wiki' do
@@ -31,6 +32,7 @@ module Kyotorb
         meetup.should_receive(:initialize_or_update_wiki) do
           FileUtils.mkdir_p(wiki_dir)
         end
+        meetup.should_receive(:update_histories)
         meetup.should_receive(:publish_wiki)
         meetup.generate_wiki!
       end
@@ -102,9 +104,10 @@ module Kyotorb
         end
         subject { @dummy_git }
         it 'リポジトリがpushされること' do
-          expect(subject.gets).to match(/git stash save/)
+          expect(subject.gets).to match(/git add Home.md/)
           expect(subject.gets).to match(/git add #{meetup.wiki_file_name}/)
-          expect(subject.gets).to match(/git commit -m 'Created next meetup ##{meetup.numbering}'/)
+          expect(subject.gets).to match(/git commit -m Created next meetup ##{meetup.numbering}/)
+          expect(subject.gets).to match(/git stash save/)
           expect(subject.gets).to match(/git push/)
           expect(subject.gets).to match(/git stash pop/)
         end
@@ -115,6 +118,19 @@ module Kyotorb
         end
         it { expect { meetup.publish_wiki }.to raise_error }
       end
+    end
+
+    describe '#update_histories' do
+      let(:home_file_name) { 'Home.md' }
+      let(:home_file_path) { File.join(wiki_dir, home_file_name) }
+      let(:meetup) { Meetup.new(dummy_mail_url) }
+      before do
+        FileUtils.mkdir_p(wiki_dir)
+        FileUtils.cp dummy_home_file, home_file_path
+        meetup.stub!(:wiki_dir => wiki_dir)
+        meetup.update_histories
+      end
+      it { expect(File.read(home_file_path)).to match(/\* \[\[#{meetup.name}\]\] - #{meetup.wiki_date}/) }
     end
 
     describe '#name' do
