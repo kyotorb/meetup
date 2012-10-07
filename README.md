@@ -1,4 +1,4 @@
-# Kyotorb::Meetup
+# Kyotorb::Meetup [![Build Status](https://secure.travis-ci.org/kyotorb/meetup.png)](http://travis-ci.org/kyotorb/meetup)
 
 Tools for Kyoto.rb meetup
 
