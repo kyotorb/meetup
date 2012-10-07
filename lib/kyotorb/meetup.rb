@@ -109,7 +109,7 @@ module Kyotorb
     end
 
     def git
-      @git = Git.new
+      @git ||= Git.new
     end
 
     private
