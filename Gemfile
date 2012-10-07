@@ -4,6 +4,7 @@ gem 'thor'
 gem 'nokogiri'
 
 group :development do
+  gem 'rake'
   gem 'rspec'
   gem 'guard'
   gem 'guard-rspec'
