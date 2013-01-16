@@ -125,7 +125,7 @@ module Kyotorb
       num_s = self.numbering.to_s
       num_s.reverse.scan(/\d/).map.with_index {|num, digit|
         num_kanji = ''
-        if digit < 1 || num.to_i > 1
+        if (digit.zero? && num.to_i > 0) || num.to_i > 1
           num_kanji << KANSUJI[num.to_i]
         end
         num_kanji << DIGITS[digit]
